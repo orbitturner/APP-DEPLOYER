@@ -7,6 +7,7 @@
     "wurus": "orbit.js"
   },
   "scripts": {
+    "start": "node orbit.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

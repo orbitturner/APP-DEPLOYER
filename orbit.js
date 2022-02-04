@@ -18,57 +18,100 @@ import chalkAnimation from 'chalk-animation';
 import figlet from 'figlet';
 import { Command } from 'commander';
 import { createSpinner } from 'nanospinner';
-import { sleep } from "./core/utils.js";
-import { version } from "./package.json";
+import { sleep, isEmpty } from "./core/utils.js";
+import { mainMenuStream, menuChoice, moduleList } from "./core/main-menu.js";
 
 // ===============================
 // INITIALIZATION
 // ===============================
-const REPO     = '';
-const APP_NAME = '';
-const APP_PATH = '';
+let APP_REPO = '';
+let APP_NAME = '';
+let APP_PATH = '';
+const program  = new Command();
+await BootStrap();
 // ===============================
+
+// ====================================================
+// BOOT PARAMS HANDLING
+// ====================================================
+async function BootStrap() {
+    program
+    .name('WURUS-CLI')
+    .description('A CLI that helps you deploy, update & monitor your Front/Back-end JS App in few steps easily.')
+    .version("1.0.1"); // Todo: Find a way to read the package.json without using --experimental-json-modules.
+
+    program
+        .option('-d, --deploy <repo>', 'Switch to deployment process with given Repository.')
+        .option('-u, --update <path>', 'Update app at given Path with his default Repository.')
+        .option('-m, --monitor <app_name>', 'Switch to MONITORING Mode of The Given App.');
+    // allow commander to parse `process.argv`
+    program.parse();
+
+    const options = program.opts();
+
+    if (options.deploy) {
+        APP_REPO = options.deploy;
+        welcome(`-> Launched in DEPLOY MODE. Given Repo : [${APP_REPO}]`);
+    }
+    if (options.update) {
+        APP_PATH = options.update;
+        welcome(`-> Launched in UPDATE MODE. Given Path : [${APP_PATH}]`);
+    }
+    if (options.monitor) {
+        APP_NAME = options.monitor;
+        welcome(`-> Launched in MONITORING MODE. Given App NAME : [${APP_NAME}]`);
+    }
+    if (isEmpty(options)) {
+        await welcome();
+        await sleep(100);
+        return _ShowMainMenu();
+    }
+}; 
+
+// ====================================================
+
+
+// ====================================================
+// 🚩 MAIN 🚀
+// ====================================================
+function _ShowMainMenu() {
+    console.log(gradient.pastel.multiline(mainMenuStream) + '\n');
+    inquirer.prompt(menuChoice).then((answer) =>{
+        console.log(answer, typeof answer)
+
+        switch (answer.choosedMenu) {
+            case 1:
+                console.log(chalk.green(`🔰 Entering Module: ${moduleList.DEPFRONT} 🔰`))
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 0:
+                process.exit(1);
+                break;
+        }
+    });
+}
 
 async function welcome(message = 'You Called the CLI without params.\nBootstraping to Main Menu...\n') {
     console.clear();
+    console.clear(); // Dumb Bug Where Console doesn't get properly cleared.
+    await sleep(100);
+
     const rainbowTitle = chalkAnimation.rainbow(
         message
     );
 
     await sleep(100);
     rainbowTitle.stop();
-    figlet(`WURUS-CLI`, (err, data) => {
+    return figlet(`WURUS-CLI`, (err, data) => {
         console.log(gradient.pastel.multiline(data) + '\n');
     });
+
+    
 }
-
-await welcome();
-
-// ====================================================
-// BOOT PARAMS HANDLING
-// ====================================================
-program
-    .name('WURUS-CLI')
-    .description('A CLI that helps you deploy, update & monitor your Front/Back-end JS App in few steps easily.')
-    .version(version);
-
-program
-    .option('-d, --deploy <repo>', 'Switch to deployment process with given Repository.')
-    .action(function () {
-        browse();
-    });
-
-program
-    .option('-u, --update <path>', 'Update app at given Path with his default Repository.')
-    .action(function () {
-        browse();
-    });
-
-program
-    .option('-m, --monitor <app_name>', 'Switch to MONITORING Mode of The Given App.')
-    .action(function () {
-        browse();
-    });
-// allow commander to parse `process.argv`
-program.parse(process.argv);
-// ====================================================
