@@ -1,0 +1,39 @@
+{
+  "name": "wurus-cli",
+  "version": "1.0.1",
+  "description": "A CLI that helps you deploy, update & monitor your Front/Back-end JS App in few steps easily.",
+  "main": "orbit.js",
+  "bin": {
+    "wurus": "orbit.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbitturner/APP-DEPLOYER.git"
+  },
+  "keywords": [
+    "CLI",
+    "Deploy",
+    "JS",
+    "Nginx"
+  ],
+  "author": "Orbit Turner",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/orbitturner/APP-DEPLOYER/issues"
+  },
+  "homepage": "https://github.com/orbitturner/APP-DEPLOYER#readme",
+  "dependencies": {
+    "chalk": "^5.0.0",
+    "chalk-animation": "^1.6.0",
+    "commander": "^9.0.0",
+    "figlet": "^1.5.2",
+    "gradient-string": "^2.0.0",
+    "inquirer": "^8.2.0",
+    "nanospinner": "^1.0.0",
+    "shelljs": "^0.8.5"
+  },
+  "type": "module"
+}
