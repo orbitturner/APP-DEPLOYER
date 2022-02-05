@@ -20,6 +20,7 @@ import { Command } from 'commander';
 import { createSpinner } from 'nanospinner';
 import { sleep, isEmpty } from "./core/utils.js";
 import { mainMenuStream, menuChoice, moduleList } from "./core/main-menu.js";
+import { InitDeployModule } from "./core/deploy/deployer.js";
 
 // ===============================
 // INITIALIZATION
@@ -74,14 +75,15 @@ async function BootStrap() {
 // ====================================================
 // 🚩 MAIN 🚀
 // ====================================================
-function _ShowMainMenu() {
+export function _ShowMainMenu() {
     console.log(gradient.pastel.multiline(mainMenuStream) + '\n');
     inquirer.prompt(menuChoice).then((answer) =>{
         console.log(answer, typeof answer)
 
         switch (answer.choosedMenu) {
             case 1:
-                console.log(chalk.green(`🔰 Entering Module: ${moduleList.DEPFRONT} 🔰`))
+                console.log(chalk.green(`🔰 Entering Module: ${moduleList.DEPLOY} 🔰`))
+                InitDeployModule();
                 break;
             case 2:
                 break;
@@ -89,10 +91,8 @@ function _ShowMainMenu() {
                 break;
             case 4:
                 break;
-            case 5:
-                break;
             case 0:
-                process.exit(1);
+                bye();
                 break;
         }
     });
@@ -114,4 +114,30 @@ async function welcome(message = 'You Called the CLI without params.\nBootstrapi
     });
 
     
+}
+
+async function bye(){
+    console.clear();
+    console.clear(); // Dumb Bug Where Console doesn't get properly cleared.
+    await sleep(100);
+
+    const rainbowTitle = chalkAnimation.rainbow(
+        `😉 See you later 👋🏾\n🚩 Checkout my website and my Github Profile For more !🚀\n
+        🌌 https://orbitturner.com/ 🌌\n
+        🔮 https://github.com/orbitturner 🔮\n\n`
+    );
+
+    await sleep(3000);
+    rainbowTitle.stop();
+
+    await  figlet.text(`BYE-BYE`,{
+        font: 'ANSI Shadow'
+    }, (err, data) => {
+        console.log(gradient.pastel.multiline(data) + '\n');
+    });
+
+    await sleep(500);
+
+    return process.exit(1);
+
 }
