@@ -1,13 +1,9 @@
 import inquirer from 'inquirer';
-import {
-    defineProject
-} from "./deploy-questions.js";
+import { defineProject } from "./deploy-questions.js";
 import InquirerFuzzyPath from "../lib/inquirerpath.js";
-import {
-    sleep, _GoHome
-} from '../utils.js';
 import chalk from 'chalk';
 import shell from "shelljs";
+import { sleep, _GoHome } from '../helpers/utils.js';
 
 // =================================
 // INITIALIZATION
@@ -22,6 +18,7 @@ export async function InitDeployModule(_REPO = null) {
     return inquirer.prompt(defineProject).then(
         (answers) => {
             if (!answers.docker) {
+                answers.projectDeployPath = answers.projectDeployPath === '/' ? '' : answers.projectDeployPath;
                 ProjectFinalPath = `${answers.projectDeployPath}${_pathSeparator}${answers.projectName}`;
                 const createFolder = shell.exec(`mkdir -p ${ProjectFinalPath}`, {
                     silent: true

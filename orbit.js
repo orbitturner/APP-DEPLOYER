@@ -18,13 +18,16 @@ import chalkAnimation from 'chalk-animation';
 import figlet from 'figlet';
 import { Command } from 'commander';
 import { createSpinner } from 'nanospinner';
-import { sleep, isEmpty } from "./core/utils.js";
 import { mainMenuStream, menuChoice, moduleList } from "./core/main-menu.js";
 import { InitDeployModule } from "./core/deploy/deployer.js";
+import { CliName, isEmpty, sleep } from './core/helpers/utils.js';
+import { OrbitLogger } from './core/helpers/orbit-logger.js';
 
 // ===============================
 // INITIALIZATION
 // ===============================
+process.title = CliName;
+// Args Pass Initialization 
 let APP_REPO = '';
 let APP_NAME = '';
 let APP_PATH = '';
@@ -37,7 +40,7 @@ await BootStrap();
 // ====================================================
 async function BootStrap() {
     program
-    .name('WURUS-CLI')
+    .name(CliName)
     .description('A CLI that helps you deploy, update & monitor your Front/Back-end JS App in few steps easily.')
     .version("1.0.1"); // Todo: Find a way to read the package.json without using --experimental-json-modules.
 
@@ -76,6 +79,7 @@ async function BootStrap() {
 // 🚩 MAIN 🚀
 // ====================================================
 export function _ShowMainMenu() {
+    OrbitLogger.trace('fhjkfhk')
     console.log(gradient.pastel.multiline(mainMenuStream) + '\n');
     inquirer.prompt(menuChoice).then((answer) =>{
         console.log(answer, typeof answer)
