@@ -51,14 +51,14 @@ export class OrbitLogger {
    * @param disableFileWrite ->  Defines Wether or not that logs will be kept
    * in a file and sent by mail to the SI.
    */
-  static trace(msg, content, disableFileWrite){
+  static trace(msg, {content, disableFileWrite, showInConsole}){
     // ----
     const date = this.formatMyDate(new Date());
     // Log Title StreamLine
     const title = this.titleStreamer(date, 'TRACE', this.traceEmoji);
     // ----
     
-    if (!disableFileWrite) {this.mail(title, msg, content);}
+    if (!disableFileWrite) {this.doLog(title, msg, content, showInConsole);}
   }
   // =================================================================================
 
@@ -81,11 +81,11 @@ export class OrbitLogger {
    * @param disableFileWrite ->  Defines Wether or not that logs will be kept
    * in a file and sent by mail to the SI.
    */
-  static debug(msg, content, disableFileWrite){
+  static debug(msg, {content= null, disableFileWrite = false, showInConsole = true}){
     const date = this.formatMyDate(new Date());
     const title = this.titleStreamer(date, 'DEBUG', this.debugEmoji);
     // ----
-    if (!disableFileWrite) {this.mail(title, msg, content);}
+    if (!disableFileWrite) {this.doLog(title, msg, content, showInConsole);}
   }
   // =================================================================================
 
@@ -107,11 +107,11 @@ export class OrbitLogger {
    * @param disableFileWrite ->  Defines Wether or not that logs will be kept
    * in a file and sent by mail to the SI.
    */
-  static info(msg, content, disableFileWrite){
+  static info(msg, {content= null, disableFileWrite = false, showInConsole = true}){
     const date = this.formatMyDate(new Date());
     const title = this.titleStreamer(date, 'INFO', this.infoEmoji);
   
-    if (!disableFileWrite) {this.mail(title, msg, content);}
+    if (!disableFileWrite) {this.doLog(title, msg, content, showInConsole);}
   }
   // =================================================================================
 
@@ -134,11 +134,11 @@ export class OrbitLogger {
    * @param disableFileWrite ->  Defines Wether or not that logs will be kept
    * in a file and sent by mail to the SI.
    */
-  static warn(msg , content, disableFileWrite){
+  static warn(msg , {content= null, disableFileWrite = false, showInConsole = true}){
     const date = this.formatMyDate(new Date());
     const title = this.titleStreamer(date, 'WARN', this.warningEmoji);
     
-    if (!disableFileWrite) {this.mail(title, msg, content);}
+    if (!disableFileWrite) {this.doLog(title, msg, content, showInConsole);}
   }
   // =================================================================================
 
@@ -158,11 +158,11 @@ export class OrbitLogger {
    * @param disableFileWrite ->  Defines Wether or not that logs will be kept
    * in a file and sent by mail to the SI.
    */
-  static error(msg, content, disableFileWrite){
+  static error(msg, {content= null, disableFileWrite = false, showInConsole = true}){
     const date = this.formatMyDate(new Date());
     const title = this.titleStreamer(date, 'ERROR', this.errorEmoji);
     // ----
-    if (!disableFileWrite) {this.mail(title, msg, content);}
+    if (!disableFileWrite) {this.doLog(title, msg, content, showInConsole);}
   }
   // =================================================================================
 
@@ -182,11 +182,11 @@ export class OrbitLogger {
    * @param disableFileWrite ->  Defines Wether or not that logs will be kept
    * in a file and sent by mail to the SI.
    */
-  static fatal(msg, content, disableFileWrite){
+  static fatal(msg, {content= null, disableFileWrite = false, showInConsole = true}){
     const date = this.formatMyDate(new Date());
     const title = this.titleStreamer(date, '📛FATAL📛', this.fatalEmoji);
 
-    if (!disableFileWrite) {this.mail(title, msg, content);}
+    if (!disableFileWrite) {this.doLog(title, msg, content, showInConsole);}
 
   }
   // =================================================================================
@@ -200,11 +200,11 @@ export class OrbitLogger {
    * @param disableFileWrite ->  Defines Wether or not that logs will be kept
    * in a file and sent by mail to the SI.
    */
-  static success(msg, content, disableFileWrite){
+  static success(msg, {content= null, disableFileWrite = false, showInConsole = true}){
     const date = this.formatMyDate(new Date());
     const title = this.titleStreamer(date, '✅SUCCESS✅', this.successEmoji);
     // ----
-    if (!disableFileWrite) {this.mail(title, msg, content);}
+    if (!disableFileWrite) {this.doLog(title, msg, content, showInConsole);}
   }
   // =================================================================================
 
@@ -269,25 +269,27 @@ export class OrbitLogger {
   // =================================================================================
 
   /**
-   * Make permanent the log it will keep it in LS and send a mail to SI.
+   * Displays the Log and Save it to file
    * TODO : MAIL TO
    * @param title
    * @param msg
    * @param content
    * @   */
-  static mail(title, msg , content){
-    console.log(chalk.bold.red(
-      chalk.bgRed.white.bold(`${title} ➥ :`) +
-      ` ❝${msg}❞.`+'\n\n'+
-      chalk.yellow.underline.bold(`⮚ ⬩ Attached Object Content ⮛`) +
-      '\n'+ this.formatParams([content])
-    ));
-    return this.PersistToDB(`${title} ➥ : 💚❝${msg}❞💚.` + '\n\n' + `⮚ ⬩ Attached Object Content ⮛` + '\n' +
+  static doLog(title, msg , content, showInConsole){
+    if (showInConsole) {
+      console.log(chalk.bold.red(
+        chalk.bgRed.white.bold(`${title} ➥ :`) +
+        ` ❝${msg}❞.`+'\n\n'+
+        chalk.yellow.underline.bold(`⮚ ⬩ Attached Object Content ⮛`) +
+        '\n'+ this.formatParams([content])
+      ));
+    }
+    return this.PersistToFile(`${title} ➥ : 💚❝${msg}❞💚.` + '\n\n' + `⮚ ⬩ Attached Object Content ⮛` + '\n' +
     this.formatParams([content])+ '\n\n----//----\n\n')
   }
 
 
-  static PersistToDB(error){
+  static PersistToFile(error){
     const log = {
       date: OrbitLogger.CurrentLogDate,
       logLevel : OrbitLogger.CurrentLogLevel,

@@ -79,7 +79,8 @@ async function BootStrap() {
 // 🚩 MAIN 🚀
 // ====================================================
 export function _ShowMainMenu() {
-    OrbitLogger.trace('fhjkfhk')
+    OrbitLogger.trace(`Orbit Is Amazing !`, {disableFileWrite: true}) // TODO: Make that function dynam params
+    
     console.log(gradient.pastel.multiline(mainMenuStream) + '\n');
     inquirer.prompt(menuChoice).then((answer) =>{
         console.log(answer, typeof answer)
